@@ -1,7 +1,7 @@
 import requests
 import json
 
-endpoint = 'http://localhost:8000/api/products/'
+endpoint = 'http://localhost:8000/products/'
 
 response = requests.get(endpoint)
 

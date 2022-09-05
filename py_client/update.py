@@ -1,7 +1,7 @@
 import requests
 import json
 
-endpoint = 'http://localhost:8000/api/products/4/update/'
+endpoint = 'http://localhost:8000/products/4/update/'
 
 data = {
     "title": "Modified"
