@@ -14,21 +14,51 @@ def api_home(request, *args, **kwargs):
         data = serializer.data
         return Response(data)
 
+'''
+List View, function based and class based
+
 @api_view(['GET'])
 def products_view(request):
-    # instance = Product.objects.all().order_by('?').first()
     queryset = Product.objects.all()
-    # data = {}
-    # for product in products:
-    #     data[product.id] = model_to_dict(product)
     data = ProductSerializer(queryset, many=True).data
-    # data['params'] = request.GET
-    # data['body'] = json.loads(request.body)
-
-
     return Response(data)
     
-
-class ProductDetailView(generics.RetrieveAPIView):
+class ProductListAPIView(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+'''
+
+class ProductDetailAPIView(generics.RetrieveAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    # lookup_field = 'title'
+
+class ProductListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+    def perform_create(self, serializer):
+        title = serializer.validated_data.get('title')
+        content =  serializer.validated_data.get('content') or None
+
+        if content is None:
+            content = title
+        serializer.save(content=content)
+
+class ProductUpdateAPIView(generics.UpdateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    lookup_field = 'pk'
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        if not instance.content:
+            instance.content = instance.title   
+
+class ProductDestroyAPIView(generics.DestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+    def perform_destroy(self, instance):
+        return super().perform_destroy(instance)
