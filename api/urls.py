@@ -1,7 +1,7 @@
 from math import prod
-from django.urls import path
-from api.views import products_view
+from django.urls import path, include
+
 
 urlpatterns = [
-    path('products/', products_view),
+    path('products/', include('product.urls')),
 ]
